@@ -1,0 +1,33 @@
+%% Known values of DIspersion Equation
+g = 9.81 % Acceleration due to gravity (m/s2)
+h = input("Water depth (m) : ")
+T = input("Wave Period (sec) : ")
+
+
+%% Initial guessed value of 'k' by Eckart equation
+e_range = 0.00005;
+
+w=(2*pi)/T;
+k_g=(w^2)/(g*sqrt(tanh((w^2)/g)*h));
+
+k_n = 0;
+diff = abs(k_g - k_n);
+
+
+%% Newton Rapson Iteration
+while diff >= e_range
+    
+    f = g * k_g * tanh(k_g*h) - ((2*pi)/T)^2;
+    df = g * tanh(k_g*h) + g * k_g * h * (1- tanh(k_g*h)^2);
+
+    k_n = k_g - (f/df);
+    diff = abs(k_g - k_n);
+    k_g = k_n;
+end
+
+%% Exporting values
+k = k_g
+L = (2*pi)/k
+
+fprintf('Wave Number (k) = %d \n', k)
+fprintf("Wavelength (L) = %d", L)
